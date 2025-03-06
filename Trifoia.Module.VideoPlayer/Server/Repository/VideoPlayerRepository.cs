@@ -39,27 +39,27 @@ namespace Trifoia.Module.VideoPlayer.Repository
             }
         }
 
-        public Models.VideoPlayer AddVideoPlayer(Models.VideoPlayer VideoPlayer)
+        public Models.VideoPlayer AddVideoPlayer(Models.VideoPlayer item)
         {
             using var db = _factory.CreateDbContext();
-            db.VideoPlayer.Add(VideoPlayer);
+            db.VideoPlayer.Add(item);
             db.SaveChanges();
-            return VideoPlayer;
+            return item;
         }
 
-        public Models.VideoPlayer UpdateVideoPlayer(Models.VideoPlayer VideoPlayer)
+        public Models.VideoPlayer UpdateVideoPlayer(Models.VideoPlayer item)
         {
             using var db = _factory.CreateDbContext();
-            db.Entry(VideoPlayer).State = EntityState.Modified;
+            db.Entry(item).State = EntityState.Modified;
             db.SaveChanges();
-            return VideoPlayer;
+            return item;
         }
 
         public void DeleteVideoPlayer(int VideoPlayerId)
         {
             using var db = _factory.CreateDbContext();
-            Models.VideoPlayer VideoPlayer = db.VideoPlayer.Find(VideoPlayerId);
-            db.VideoPlayer.Remove(VideoPlayer);
+            var item = db.VideoPlayer.Find(VideoPlayerId);
+            db.VideoPlayer.Remove(item);
             db.SaveChanges();
         }
 
@@ -88,27 +88,27 @@ namespace Trifoia.Module.VideoPlayer.Repository
             }
         }
 
-        public async Task<Models.VideoPlayer> AddVideoPlayerAsync(Models.VideoPlayer VideoPlayer)
+        public async Task<Models.VideoPlayer> AddVideoPlayerAsync(Models.VideoPlayer item)
         {
             using var db = _factory.CreateDbContext();
-            db.VideoPlayer.Add(VideoPlayer);
+            db.VideoPlayer.Add(item);
             await db.SaveChangesAsync();
-            return VideoPlayer;
+            return item;
         }
 
-        public async Task<Models.VideoPlayer> UpdateVideoPlayerAsync(Models.VideoPlayer VideoPlayer)
+        public async Task<Models.VideoPlayer> UpdateVideoPlayerAsync(Models.VideoPlayer item)
         {
             using var db = _factory.CreateDbContext();
-            db.Entry(VideoPlayer).State = EntityState.Modified;
+            db.Entry(item).State = EntityState.Modified;
             await db.SaveChangesAsync();
-            return VideoPlayer;
+            return item;
         }
 
         public async Task DeleteVideoPlayerAsync(int VideoPlayerId)
         {
             using var db = _factory.CreateDbContext();
-            Models.VideoPlayer VideoPlayer = db.VideoPlayer.Find(VideoPlayerId);
-            db.VideoPlayer.Remove(VideoPlayer);
+           var item = db.VideoPlayer.Find(VideoPlayerId);
+            db.VideoPlayer.Remove(item);
             await db.SaveChangesAsync();
         }
     }

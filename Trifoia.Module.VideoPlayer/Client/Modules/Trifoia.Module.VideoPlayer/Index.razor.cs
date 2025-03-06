@@ -17,7 +17,7 @@ namespace Trifoia.Module.VideoPlayer;
 
 public partial class Index : ModuleBase
 {
-    List<Models.VideoPlayer> _VideoPlayers;
+    List<Models.VideoPlayer> _list;
 		
     [Inject] public VideoPlayerService VideoPlayerService { get; set; }
     [Inject] public NavigationManager NavigationManager { get; set; }
@@ -41,7 +41,7 @@ public partial class Index : ModuleBase
         {
             var moduleSettings = await SettingService.GetModuleSettingsAsync(ModuleState.ModuleId);
             _settingsVM = new SettingsViewModel(SettingService, moduleSettings);
-            (_VideoPlayers, var code) = await VideoPlayerService.GetVideoPlayersAsync();
+            (_list, var code) = await VideoPlayerService.GetVideoPlayersAsync();
             if (!IsSuccessStatusCode(code)) {
                 throw new HttpRequestException($"Error loading VideoPlayers. Code: {code}");
             }
@@ -55,23 +55,23 @@ public partial class Index : ModuleBase
         }
     }
 
-    private async Task Delete(Models.VideoPlayer VideoPlayer)
+    private async Task Delete(Models.VideoPlayer item)
     {
         try
         {
-            var code = await VideoPlayerService.DeleteVideoPlayerAsync(VideoPlayer.VideoPlayerId);
+            var code = await VideoPlayerService.DeleteVideoPlayerAsync(item.VideoPlayerId);
             if (!IsSuccessStatusCode(code)) {
-                throw new HttpRequestException($"Error Deleting VideoPlayers. id:{VideoPlayer.VideoPlayerId}, Code: {code}");
+                throw new HttpRequestException($"Error Deleting VideoPlayers. id:{item.VideoPlayerId}, Code: {code}");
             }
-            await logger.LogInformation("VideoPlayer Deleted {VideoPlayer}", VideoPlayer);
+            await logger.LogInformation("VideoPlayer Deleted {item}", item);
 
-            (_VideoPlayers, code ) = await VideoPlayerService.GetVideoPlayersAsync();
+            (_list, code ) = await VideoPlayerService.GetVideoPlayersAsync();
 
             StateHasChanged();
         }
         catch (Exception ex)
         {
-            await logger.LogError(ex, "Error Deleting VideoPlayer {VideoPlayer} {Error}", VideoPlayer, ex.Message);
+            await logger.LogError(ex, "Error Deleting VideoPlayer {item} {Error}", item, ex.Message);
             AddModuleMessage(Localizer["Message.DeleteError"], MessageType.Error);
         }
     }

@@ -5,7 +5,7 @@
 		<Version>1.0.0</Version>
 		<Authors>Trifoia</Authors>
 		<Company>Trifoia</Company>
-		<Description>Open Source edition of the Trifoia Video player Oqtane module</Description>
+		<Description>FOSS Video Player from Trifoia</Description>
 		<Product>Trifoia.VideoPlayer</Product>
 		<Copyright>Trifoia</Copyright>
 		<AssemblyName>Trifoia.Module.VideoPlayer.Client.Oqtane</AssemblyName>
@@ -13,12 +13,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="9.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Localization" Version="9.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Http" Version="9.0.0" />
-		<PackageReference Include="System.Net.Http.Json" Version="9.0.0" />
-		<PackageReference Include="MudBlazor" Version="7.15.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="9.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Localization" Version="9.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="9.0.1" />
+		<PackageReference Include="System.Net.Http.Json" Version="9.0.1" />
+
+		<PackageReference Include="MudBlazor" Version="8.2.0" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -26,8 +27,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Reference Include="Oqtane.Client"><HintPath>..\..\oqtane.framework\Oqtane.Server\bin\Debug\net9.0\Oqtane.Client.dll</HintPath></Reference>
-		<Reference Include="Oqtane.Shared"><HintPath>..\..\oqtane.framework\Oqtane.Server\bin\Debug\net9.0\Oqtane.Shared.dll</HintPath></Reference>
+		<PackageReference Include="Oqtane.Client" Version="6.1.0" />
+		<PackageReference Include="Oqtane.Shared" Version="6.1.0" />
 	</ItemGroup>
 
 	<PropertyGroup>

@@ -8,7 +8,7 @@ namespace Trifoia.Module.VideoPlayer
         public ModuleDefinition ModuleDefinition => new ModuleDefinition
         {
             Name = "VideoPlayer",
-            Description = "Open Source edition of the Trifoia Video player Oqtane module",
+            Description = "FOSS Video Player from Trifoia",
             Version = "1.0.0",
             ServerManagerType = "Trifoia.Module.VideoPlayer.Manager.VideoPlayerManager, Trifoia.Module.VideoPlayer.Server.Oqtane",
             ReleaseVersions = "1.0.0",

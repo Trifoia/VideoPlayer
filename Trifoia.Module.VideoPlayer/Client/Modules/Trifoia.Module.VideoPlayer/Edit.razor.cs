@@ -13,6 +13,7 @@ using Oqtane.Shared;
 using Oqtane.Services;
 
 using Trifoia.Module.VideoPlayer.Services;
+using static MudBlazor.CategoryTypes;
 
 
 namespace Trifoia.Module.VideoPlayer
@@ -28,8 +29,8 @@ namespace Trifoia.Module.VideoPlayer
         private bool success = false;
         private SettingsViewModel _settingsVM;
         private bool IsLoaded = false;
-        private Models.VideoPlayer VideoPlayer { get; set; } = new();
-        private int _VideoPlayerId;
+        private Models.VideoPlayer _item { get; set; } = new();
+        private int _id;
 
 		public override SecurityAccessLevel SecurityAccessLevel => SecurityAccessLevel.Edit;
 
@@ -54,8 +55,8 @@ namespace Trifoia.Module.VideoPlayer
                 _settingsVM = new SettingsViewModel(SettingService, moduleSettings);
 			    if (PageState.Action == "Edit")
 			    {
-				    _VideoPlayerId = Int32.Parse(PageState.QueryString["id"]);
-                    (VideoPlayer, var code) = await VideoPlayerService.GetVideoPlayerAsync(_VideoPlayerId);
+				    _id = Int32.Parse(PageState.QueryString["id"]);
+                    (_item, var code) = await VideoPlayerService.GetVideoPlayerAsync(_id);
                     if (!IsSuccessStatusCode(code)) {
                         throw new HttpRequestException($"Error loading VideoPlayer. Code: {code}");
                     }
@@ -64,7 +65,7 @@ namespace Trifoia.Module.VideoPlayer
             }
 		    catch (Exception ex)
 		    {
-			    await logger.LogError(ex, "Error Loading VideoPlayer {VideoPlayerId} {Error}", _VideoPlayerId, ex.Message);
+			    await logger.LogError(ex, "Error Loading VideoPlayer {VideoPlayerId} {Error}", _id, ex.Message);
 			    AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
 		    }
 	    }
@@ -79,28 +80,30 @@ namespace Trifoia.Module.VideoPlayer
                 {
                     if (PageState.Action == "Add")
                     {
-                        VideoPlayer.ModuleId = ModuleState.ModuleId;
-                        (VideoPlayer, var code) = await VideoPlayerService.AddVideoPlayerAsync(VideoPlayer);
+                        _item.ModuleId = ModuleState.ModuleId;
+                        (var item, var code) = await VideoPlayerService.AddVideoPlayerAsync(_item);
                         if (code is not HttpStatusCode.OK) {
-                            throw new HttpRequestException($"Error Adding {VideoPlayer}. Code: {code}");
-                        }    
-                        await logger.LogInformation("VideoPlayer Added {VideoPlayer}", VideoPlayer);
+                            throw new HttpRequestException($"Error Adding {_item}. Code: {code}");
+                        }
+                        _item = item;
+                        await logger.LogInformation("VideoPlayer Added {item}", item);
                     }
                     else
                     {
-                        (var VideoPlayerLatest, var code) = await VideoPlayerService.GetVideoPlayerAsync(_VideoPlayerId);
+                        (var latest, var code) = await VideoPlayerService.GetVideoPlayerAsync(_id);
                         if (code is not HttpStatusCode.OK) {
                             throw new HttpRequestException($"Error loading VideoPlayer. Code: {code}");
                         }
                     
                         // update values from the local version of VideoPlayer
-                        VideoPlayerLatest.Name = VideoPlayer.Name;
+                        latest.Name = _item.Name;
                         // update Database with the latest version of VideoPlayer
-                        (VideoPlayer, code) = await VideoPlayerService.AddVideoPlayerAsync(VideoPlayerLatest);
+                        (var item, code) = await VideoPlayerService.UpdateVideoPlayerAsync(latest);
                         if (code is not HttpStatusCode.OK) {
-                            throw new HttpRequestException($"Error Adding {VideoPlayer}. Code: {code}");
-                        }         
-                        await logger.LogInformation("VideoPlayer Updated {VideoPlayerLatest}", VideoPlayerLatest);
+                            throw new HttpRequestException($"Error Adding {_item}. Code: {code}");
+                        }
+                        _item = item;
+                        await logger.LogInformation("VideoPlayer Updated {latest}", latest);
                     }
                     NavigationManager.NavigateTo(NavigateUrl());
                 }

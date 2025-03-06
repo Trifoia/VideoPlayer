@@ -19,15 +19,15 @@
         <MudItem xs="12">
             <MudPaper Class="pa-4">
                 <MudForm @ref="mudform" @bind-IsValid="@success">
-                    <MudTextField @bind-Value="@VideoPlayer.Name" Label="@Localizer[" Name.Text"]" HelperText="@Localizer[" Name.HelpText"]" Required="true" RequiredError="@Localizer[" Name.Required"]" />
+                    <MudTextField @bind-Value="@_item.Name" Label="@Localizer["Name.Text"]" HelperText="@Localizer[" Name.HelpText"]" Required="true" RequiredError="@Localizer[" Name.Required"]" />
                 </MudForm>
             </MudPaper>
             <MudDivider Class="pt-1 pb-1" />
             <MudPaper Class="pa-3">
                 <MudStack Justify="Justify.SpaceBetween" Row="true">
                     <MudItem>
-                        <AuditInfo DateTimeFormat="dd-MMM-yyyy hh:mm" CreatedBy="@VideoPlayer.CreatedBy" CreatedOn="@VideoPlayer.CreatedOn"
-                                   ModifiedBy="@VideoPlayer.ModifiedBy" ModifiedOn="@VideoPlayer.ModifiedOn"></AuditInfo>
+                        <AuditInfo DateTimeFormat="dd-MMM-yyyy hh:mm" CreatedBy="@_item.CreatedBy" CreatedOn="@_item.CreatedOn"
+                                   ModifiedBy="@_item.ModifiedBy" ModifiedOn="@_item.ModifiedOn"></AuditInfo>
                     </MudItem>
                     <MudItem Class="d-flex align-end ">
                         <div class="d-flex flex-row justify-end gap-0">
