@@ -12,6 +12,9 @@ using Oqtane.Shared;
 using Oqtane.Services;
 
 using Trifoia.Module.VideoPlayer.Services;
+using Blazored.Video.Support;
+using Blazored.Video;
+using System.ComponentModel;
 
 namespace Trifoia.Module.VideoPlayer;
 
@@ -33,7 +36,10 @@ public partial class Index : ModuleBase
         new Resource { ResourceType = ResourceType.Script,      Url = ModulePath() + "Module.js" },
     };	
     private bool IsLoaded;
-    private SettingsViewModel _settingsVM; 
+    private SettingsViewModel _settingsVM;
+    Dictionary<VideoEvents, VideoStateOptions> options = new();
+    BlazoredVideo videoPlayer;
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -41,10 +47,8 @@ public partial class Index : ModuleBase
         {
             var moduleSettings = await SettingService.GetModuleSettingsAsync(ModuleState.ModuleId);
             _settingsVM = new SettingsViewModel(SettingService, moduleSettings);
-            (_list, var code) = await VideoPlayerService.GetVideoPlayersAsync();
-            if (!IsSuccessStatusCode(code)) {
-                throw new HttpRequestException($"Error loading VideoPlayers. Code: {code}");
-            }
+           
+            ((INotifyPropertyChanged)SiteState.Properties).PropertyChanged += PropertyChanged;
 
             IsLoaded = true;
         }
@@ -55,29 +59,24 @@ public partial class Index : ModuleBase
         }
     }
 
-    private async Task Delete(Models.VideoPlayer item)
+
+    async void PropertyChanged(object sender, PropertyChangedEventArgs e)
     {
-        try
+        if (e.PropertyName == "VideoSeek")
         {
-            var code = await VideoPlayerService.DeleteVideoPlayerAsync(item.VideoPlayerId);
-            if (!IsSuccessStatusCode(code)) {
-                throw new HttpRequestException($"Error Deleting VideoPlayers. id:{item.VideoPlayerId}, Code: {code}");
+            // Wait until videoPlayer is not null
+            while (videoPlayer == null)
+            {
+                await Task.Delay(100); // Retry every 100 milliseconds
             }
-            await logger.LogInformation("VideoPlayer Deleted {item}", item);
 
-            (_list, code ) = await VideoPlayerService.GetVideoPlayersAsync();
+            double seekTime = (double)SiteState.Properties.VideoSeek;
+            await videoPlayer.SetCurrentTimeAsync(seekTime);
+        }
 
-            StateHasChanged();
-        }
-        catch (Exception ex)
-        {
-            await logger.LogError(ex, "Error Deleting VideoPlayer {item} {Error}", item, ex.Message);
-            AddModuleMessage(Localizer["Message.DeleteError"], MessageType.Error);
-        }
+        StateHasChanged();
     }
 
-     static bool IsSuccessStatusCode(HttpStatusCode statusCode) { 
-        return (int)statusCode >= 200 && (int)statusCode <= 299; 
-    }
+    
 }
 

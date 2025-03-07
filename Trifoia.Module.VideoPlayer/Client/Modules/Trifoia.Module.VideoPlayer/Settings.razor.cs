@@ -20,7 +20,7 @@ namespace Trifoia.Module.VideoPlayer
         public override string Title => "VideoPlayer Settings";
         private SettingsViewModel _settingsVM;
         private bool _loading = true;
-        private string _value;
+     
         public override List<Resource> Resources => new List<Resource>()
             {
                 new Resource { ResourceType = ResourceType.Stylesheet,  Url = "https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" },
