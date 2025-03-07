@@ -23,6 +23,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\..\BlazoredVideo\src\Blazored.Video\Blazored.Video.csproj" />
 		<ProjectReference Include="..\Shared\Trifoia.Module.VideoPlayer.Shared.csproj" />
 	</ItemGroup>
 
